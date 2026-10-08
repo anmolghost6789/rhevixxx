@@ -36,11 +36,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenJoin }) => {
                 </a>
               </li>
               <li>
-                <a href="#opportunities" className="hover:text-[#101216] transition-colors">
-                  Opportunities
-                </a>
-              </li>
-              <li>
                 <a href="#why-rhevix" className="hover:text-[#101216] transition-colors">
                   Why RHEVIX
                 </a>

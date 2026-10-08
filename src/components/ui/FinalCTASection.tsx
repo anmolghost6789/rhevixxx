@@ -24,7 +24,7 @@ export const FinalCTASection: React.FC<FinalCTASectionProps> = ({
 
           {/* Large Clean Statement */}
           <h2 className="text-4xl sm:text-6xl lg:text-7xl font-[750] text-[#101216] tracking-tight leading-[1.05]">
-            Your next opportunity <br />
+            Your frontier AI journey <br />
             <span>starts here.</span>
           </h2>
 

@@ -45,12 +45,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin, onOpenJoin }) => {
               Experts
             </a>
             <a
-              href="#opportunities"
-              className="px-3.5 py-1.5 rounded-lg hover:text-[#101216] hover:bg-[#EEF1F4]/70 transition-colors"
-            >
-              Opportunities
-            </a>
-            <a
               href="#why-rhevix"
               className="px-3.5 py-1.5 rounded-lg hover:text-[#101216] hover:bg-[#EEF1F4]/70 transition-colors"
             >
@@ -95,13 +89,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin, onOpenJoin }) => {
               className="px-3 py-2 rounded-lg hover:bg-[#EEF1F4]"
             >
               Experts
-            </a>
-            <a
-              href="#opportunities"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-[#EEF1F4]"
-            >
-              Opportunities
             </a>
             <a
               href="#why-rhevix"

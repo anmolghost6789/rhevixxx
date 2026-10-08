@@ -6,7 +6,7 @@ import { ScrollReveal } from "./ScrollReveal";
 
 interface HeroProps {
   onExploreExperts: () => void;
-  onExploreOpportunities: () => void;
+  onJoinRhevix: () => void;
   onSelectHeroExpert: () => void;
 }
 
@@ -19,7 +19,7 @@ const ROTATING_PHRASES = [
 
 export const Hero: React.FC<HeroProps> = ({
   onExploreExperts,
-  onExploreOpportunities,
+  onJoinRhevix,
   onSelectHeroExpert,
 }) => {
   const cardRef = React.useRef<HTMLDivElement | null>(null);
@@ -161,10 +161,10 @@ export const Hero: React.FC<HeroProps> = ({
                 </button>
 
                 <button
-                  onClick={onExploreOpportunities}
+                  onClick={onJoinRhevix}
                   className="w-full sm:w-auto px-7 py-3.5 bg-white hover:bg-[#EEF1F4] text-[#17191D] font-[550] text-sm rounded-xl border border-[rgba(15,23,42,0.12)] hover:border-[rgba(15,23,42,0.25)] shadow-xs transition-all duration-200 flex items-center justify-center gap-2 hover:-translate-y-0.5"
                 >
-                  <span>Explore Opportunities</span>
+                  <span>Join RHEVIX</span>
                 </button>
               </div>
 

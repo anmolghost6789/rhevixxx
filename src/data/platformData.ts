@@ -281,11 +281,11 @@ export const WHY_RHEVIX_BENEFITS = [
   },
   {
     number: "03",
-    title: "Find better opportunities",
+    title: "Frontier Collaboration",
     description:
-      "Get matched directly with funded frontier AI labs, deeptech startups, and tier-1 companies for high-value contracts and engineering roles.",
-    stat: "$220+",
-    statLabel: "Average hourly contract compensation",
+      "Collaborate directly with researchers, builders, and deeptech initiatives pushing the boundaries of autonomous systems.",
+    stat: "120+",
+    statLabel: "Global research hubs represented",
   },
 ];
 

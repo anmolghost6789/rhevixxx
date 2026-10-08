@@ -5,7 +5,6 @@ import { SmoothScrollProvider } from "@/components/ui/SmoothScrollProvider";
 import { Navbar } from "@/components/ui/Navbar";
 import { Hero } from "@/components/ui/Hero";
 import { ExpertsSection } from "@/components/ui/ExpertsSection";
-import { OpportunitiesSection } from "@/components/ui/OpportunitiesSection";
 import { WhyRhevixSection } from "@/components/ui/WhyRhevixSection";
 import { FinalCTASection } from "@/components/ui/FinalCTASection";
 import { Footer } from "@/components/ui/Footer";
@@ -14,9 +13,8 @@ import { LivingBackground } from "@/components/background/LivingBackground";
 // Interactive Modals
 import { AuthModal } from "@/components/modals/AuthModal";
 import { ExpertModal } from "@/components/modals/ExpertModal";
-import { OpportunityModal } from "@/components/modals/OpportunityModal";
 
-import { Expert, OpportunityItem, EXPERTS } from "@/data/platformData";
+import { Expert, EXPERTS } from "@/data/platformData";
 
 export default function HomePage() {
   const [authModalState, setAuthModalState] = useState<{
@@ -28,7 +26,6 @@ export default function HomePage() {
   });
 
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
-  const [selectedOpportunity, setSelectedOpportunity] = useState<OpportunityItem | null>(null);
 
   const handleOpenLogin = () => {
     setAuthModalState({ isOpen: true, mode: "login" });
@@ -45,8 +42,8 @@ export default function HomePage() {
     }
   };
 
-  const handleExploreOpportunities = () => {
-    const el = document.getElementById("opportunities");
+  const handleExploreWhyRhevix = () => {
+    const el = document.getElementById("why-rhevix");
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
@@ -68,7 +65,7 @@ export default function HomePage() {
           {/* Hero Section */}
           <Hero
             onExploreExperts={handleExploreExperts}
-            onExploreOpportunities={handleExploreOpportunities}
+            onJoinRhevix={handleOpenJoin}
             onSelectHeroExpert={() => setSelectedExpert(EXPERTS[0])}
           />
 
@@ -76,12 +73,6 @@ export default function HomePage() {
           <ExpertsSection
             onSelectExpert={(expert) => setSelectedExpert(expert)}
             onExploreAllExperts={handleExploreExperts}
-          />
-
-          {/* Opportunities Section */}
-          <OpportunitiesSection
-            onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
-            onExploreOpportunities={handleExploreOpportunities}
           />
 
           {/* Why RHEVIX (3 Simple Benefits with Large Typography) */}
@@ -107,11 +98,6 @@ export default function HomePage() {
         <ExpertModal
           expert={selectedExpert}
           onClose={() => setSelectedExpert(null)}
-        />
-
-        <OpportunityModal
-          opportunity={selectedOpportunity}
-          onClose={() => setSelectedOpportunity(null)}
         />
       </div>
     </SmoothScrollProvider>
