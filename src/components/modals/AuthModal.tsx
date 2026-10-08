@@ -80,7 +80,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <p className="text-xs text-[#4B5563] max-w-xs mx-auto leading-relaxed">
                 {mode === "login"
                   ? `Signed in as ${email}. Redirecting to your dashboard...`
-                  : `Account created for ${email}. You now have access to frontier masterclasses and expert office hours.`}
+                  : `Account created for ${email}. You now have access to your enterprise AI workspace and project telemetry.`}
               </p>
             </div>
             <button
@@ -98,8 +98,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </h3>
               <p className="text-xs text-[#4B5563] mt-1">
                 {mode === "login"
-                  ? "Access your saved sessions and mentor conversations."
-                  : "Connect with frontier AI experts, masterclasses, and global peers."}
+                  ? "Access your enterprise workspace and project telemetry."
+                  : "Collaborate with RHEVIX on enterprise AI and digital modernization."}
               </p>
             </div>
 

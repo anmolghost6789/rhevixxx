@@ -1,17 +1,3 @@
-export interface Expert {
-  id: string;
-  name: string;
-  role: string;
-  affiliation: string;
-  expertise: string;
-  shortDescription: string;
-  photo: string;
-  rating: number;
-  studentsCount: number;
-  featuredTopic: string;
-}
-
-
 export interface OpportunityItem {
   id: string;
   role: string;
@@ -49,103 +35,6 @@ export interface EditorialLeader {
   bio: string;
   verifiedBadges: string[];
 }
-
-export interface ExpertStory {
-  id: string;
-  name: string;
-  profession: string;
-  education: string;
-  testimonial: string;
-  duration: string;
-  rate: string;
-  avatar: string;
-  specialty: string;
-}
-
-export interface ExpertiseCategory {
-  id: string;
-  title: string;
-  opportunitiesCount: number;
-  description: string;
-  skills: string[];
-  icon: string;
-}
-
-export const EXPERTS: Expert[] = [
-  {
-    id: "elena-vance",
-    name: "Dr. Elena Vance",
-    role: "Principal Alignment Researcher",
-    affiliation: "MIT Ph.D. · ex-Frontier Safety",
-    expertise: "RLHF & Interpretability",
-    shortDescription: "Pioneering verifiable safety guarantees and chain-of-thought calibration for reasoning models.",
-    photo: "/images/elena_vance.jpg",
-    rating: 4.98,
-    studentsCount: 1420,
-    featuredTopic: "Reasoning Model Evaluation",
-  },
-  {
-    id: "marcus-thorne",
-    name: "Marcus Thorne",
-    role: "Staff Distributed AI Architect",
-    affiliation: "Stanford MS · Former Cluster Lead",
-    expertise: "GPU Infrastructure & Slurm",
-    shortDescription: "Architecting megawatt-scale training pipelines and fault-tolerant tensor parallelism across 100k+ clusters.",
-    photo: "/images/marcus_thorne.jpg",
-    rating: 4.96,
-    studentsCount: 1890,
-    featuredTopic: "Distributed Training at Scale",
-  },
-  {
-    id: "sophia-chen",
-    name: "Sophia Chen",
-    role: "Lead Multimodal Perception Engineer",
-    affiliation: "Carnegie Mellon AI Institute",
-    expertise: "Vision-Language & Robotics",
-    shortDescription: "Developing real-time continuous video representation and spatial intuition models for autonomous hardware.",
-    photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&auto=format&fit=crop&q=80",
-    rating: 4.95,
-    studentsCount: 1150,
-    featuredTopic: "Embodied Vision-Language Systems",
-  },
-  {
-    id: "tariq-mansoor",
-    name: "Dr. Tariq Al-Mansoor",
-    role: "Cognitive Science & Reasoning Lead",
-    affiliation: "Oxford Ph.D. · Cognitive Systems",
-    expertise: "Formal Proofs & Logic",
-    shortDescription: "Building mathematical verification frameworks and Lean-based automated proof systems for LLM outputs.",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80",
-    rating: 4.99,
-    studentsCount: 920,
-    featuredTopic: "Mathematical Logic & Verification",
-  },
-  {
-    id: "aris-thorne",
-    name: "Dr. Aris Thorne",
-    role: "Senior Formal Verification Specialist",
-    affiliation: "ETH Zürich · Applied Mathematics",
-    expertise: "Lean 4 & Theorem Proving",
-    shortDescription: "Bridging formal mathematical proofs with automated model synthesis for high-assurance code generation.",
-    photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
-    rating: 4.94,
-    studentsCount: 840,
-    featuredTopic: "Automated Theorem Proving",
-  },
-  {
-    id: "alex-rivera",
-    name: "Alex Rivera",
-    role: "Autonomous Agent Systems Architect",
-    affiliation: "ex-DeepMind · Robotics Fellow",
-    expertise: "Multi-Agent Workflows",
-    shortDescription: "Designing resilient state-machine coordination and human-in-the-loop steering for autonomous swarms.",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&auto=format&fit=crop&q=80",
-    rating: 4.97,
-    studentsCount: 1670,
-    featuredTopic: "Multi-Agent Swarm Architectures",
-  },
-];
-
 
 export const OPPORTUNITIES: OpportunityItem[] = [
   {
@@ -325,30 +214,7 @@ export const VALUE_PROPOSITIONS = [
   },
 ];
 
-export const EXPERT_STORIES: ExpertStory[] = [
-  {
-    id: "story-1",
-    name: "Dr. Aris Thorne",
-    profession: "Post-Doctoral Fellow in Formal Verification",
-    education: "ETH Zürich · Mathematics",
-    testimonial: "Rhevix connected me to a Tier 1 lab working on theorem proving.",
-    duration: "2:40 Min Story",
-    rate: "$280/hr",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80",
-    specialty: "Mathematical Logic & Lean 4",
-  },
-];
 
-export const EXPERTISE_CATEGORIES: ExpertiseCategory[] = [
-  {
-    id: "software-eng",
-    title: "Software Engineering",
-    opportunitiesCount: 1420,
-    description: "High-concurrency systems, low-latency APIs, and distributed scalable architectures.",
-    skills: ["Rust", "Go"],
-    icon: "Code",
-  },
-];
 
 export const HOW_IT_WORKS_STEPS = [
   {

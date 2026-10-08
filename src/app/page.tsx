@@ -8,7 +8,6 @@ import { CapabilitiesSection } from "@/components/ui/CapabilitiesSection";
 import { RhevixAISection } from "@/components/ui/RhevixAISection";
 import { WhatWeBuildSection } from "@/components/ui/WhatWeBuildSection";
 import { TechnologyStackSection } from "@/components/ui/TechnologyStackSection";
-import { ExpertsSection } from "@/components/ui/ExpertsSection";
 import { OpportunitiesSection } from "@/components/ui/OpportunitiesSection";
 import { WhyRhevixSection } from "@/components/ui/WhyRhevixSection";
 import { IndustriesSection } from "@/components/ui/IndustriesSection";
@@ -20,10 +19,9 @@ import { LivingBackground } from "@/components/background/LivingBackground";
 
 // Interactive Modals
 import { AuthModal } from "@/components/modals/AuthModal";
-import { ExpertModal } from "@/components/modals/ExpertModal";
 import { OpportunityModal } from "@/components/modals/OpportunityModal";
 
-import { Expert, OpportunityItem, EXPERTS } from "@/data/platformData";
+import { OpportunityItem } from "@/data/platformData";
 
 export default function HomePage() {
   const [authModalState, setAuthModalState] = useState<{
@@ -34,7 +32,6 @@ export default function HomePage() {
     mode: "join",
   });
 
-  const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
   const [selectedOpportunity, setSelectedOpportunity] = useState<OpportunityItem | null>(null);
 
   const handleOpenLogin = () => {
@@ -45,8 +42,8 @@ export default function HomePage() {
     setAuthModalState({ isOpen: true, mode: "join" });
   };
 
-  const handleExploreExperts = () => {
-    const el = document.getElementById("experts");
+  const handleExploreCapabilities = () => {
+    const el = document.getElementById("capabilities");
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
@@ -81,9 +78,8 @@ export default function HomePage() {
         <main className="relative z-10 flex flex-col">
           {/* 0. Hero Section */}
           <Hero
-            onExploreExperts={handleExploreExperts}
-            onJoinRhevix={handleScrollContact}
-            onSelectHeroExpert={() => setSelectedExpert(EXPERTS[0])}
+            onExploreCapabilities={handleExploreCapabilities}
+            onContact={handleScrollContact}
           />
 
           {/* 1. Capabilities (Engineering Intelligence) */}
@@ -98,13 +94,7 @@ export default function HomePage() {
           {/* 4. Technology Stack (Built Across Modern Technology Stack) */}
           <TechnologyStackSection />
 
-          {/* Existing Experts Section */}
-          <ExpertsSection
-            onSelectExpert={(expert) => setSelectedExpert(expert)}
-            onExploreAllExperts={handleExploreExperts}
-          />
-
-          {/* Existing Opportunities Section */}
+          {/* Opportunities Section */}
           <OpportunitiesSection
             onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
             onExploreOpportunities={handleExploreOpportunities}
@@ -126,7 +116,7 @@ export default function HomePage() {
           <FinalBusinessCTASection />
         </main>
 
-        {/* 10. Final Premium Footer (Capabilities, Industries, Company, Locations, Connect) */}
+        {/* 10. Final Premium Footer */}
         <Footer onOpenJoin={handleOpenJoin} />
 
         {/* Interactive Modals */}
@@ -134,11 +124,6 @@ export default function HomePage() {
           isOpen={authModalState.isOpen}
           defaultMode={authModalState.mode}
           onClose={() => setAuthModalState({ ...authModalState, isOpen: false })}
-        />
-
-        <ExpertModal
-          expert={selectedExpert}
-          onClose={() => setSelectedExpert(null)}
         />
 
         <OpportunityModal
