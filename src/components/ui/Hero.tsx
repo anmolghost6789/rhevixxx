@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowRight, Sparkles, Star, Users, CheckCircle, Play } from "lucide-react";
 import { ScrollReveal } from "./ScrollReveal";
 
@@ -10,6 +10,13 @@ interface HeroProps {
   onSelectHeroExpert: () => void;
 }
 
+const ROTATING_PHRASES = [
+  { text: "Digital Transformation", accent: "from-[#101216] via-[#3155FF] to-[#1E3A8A]", badge: "AI Enterprise" },
+  { text: "Frontier AI Systems", accent: "from-[#101216] via-[#4F46E5] to-[#3155FF]", badge: "Deep Research" },
+  { text: "Autonomous Intelligence", accent: "from-[#101216] via-[#2563EB] to-[#06B6D4]", badge: "Agent Swarms" },
+  { text: "Engineering Excellence", accent: "from-[#101216] via-[#3155FF] to-[#6366F1]", badge: "Top 1.5% Talent" },
+];
+
 export const Hero: React.FC<HeroProps> = ({
   onExploreExperts,
   onExploreCourses,
@@ -17,6 +24,22 @@ export const Hero: React.FC<HeroProps> = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setIsFlipping(true);
+      setTimeout(() => {
+        setPhraseIndex((prev) => (prev + 1) % ROTATING_PHRASES.length);
+        setIsFlipping(false);
+      }, 350);
+    }, 3800);
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   const handleHeroVisualMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (window.innerWidth < 768) return;
@@ -47,11 +70,71 @@ export const Hero: React.FC<HeroProps> = ({
                 <span>Frontier AI Learning & Expert Network</span>
               </div>
 
-              {/* Huge Simple Headline */}
-              <h1 className="text-4xl sm:text-6xl lg:text-[70px] font-[750] tracking-tight text-[#101216] leading-[1.06]">
-                Empower Your <br />
-                <span className="text-[#101216]">Digital Transformation</span>
+              {/* Huge Simple Headline with 3D Rotating Capability Effect */}
+              <h1 className="text-4xl sm:text-6xl lg:text-[68px] font-[750] tracking-tight text-[#101216] leading-[1.08] select-none">
+                <span className="inline-block hover:text-[#3155FF] transition-colors duration-300">
+                  Empower Your
+                </span>{" "}
+                <br />
+                <span
+                  className="relative inline-flex items-center flex-wrap gap-3 cursor-pointer group/rotate py-1 mt-1"
+                  style={{ perspective: "1000px" }}
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
+                  onClick={() => {
+                    setIsFlipping(true);
+                    setTimeout(() => {
+                      setPhraseIndex((prev) => (prev + 1) % ROTATING_PHRASES.length);
+                      setIsFlipping(false);
+                    }, 250);
+                  }}
+                  title="Click to cycle capabilities"
+                >
+                  <span
+                    className="inline-block transition-all duration-350"
+                    style={{
+                      transform: isFlipping
+                        ? "rotateX(75deg) translateY(-26px) scale(0.96)"
+                        : "rotateX(0deg) translateY(0px) scale(1)",
+                      opacity: isFlipping ? 0 : 1,
+                      filter: isFlipping ? "blur(3px)" : "blur(0px)",
+                      transition: "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.25s ease",
+                    }}
+                  >
+                    <span className={`bg-gradient-to-r ${ROTATING_PHRASES[phraseIndex].accent} bg-clip-text text-transparent`}>
+                      {ROTATING_PHRASES[phraseIndex].text}
+                    </span>
+                  </span>
+
+                  {/* Dynamic 3D Tag Badge */}
+                  <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-[rgba(15,23,42,0.08)] shadow-2xs text-[10px] font-mono font-semibold text-[#3155FF] group-hover/rotate:border-[#3155FF]/40 transition-all duration-300">
+                    <Sparkles className="w-2.5 h-2.5 text-[#3155FF]" />
+                    <span>{ROTATING_PHRASES[phraseIndex].badge}</span>
+                  </span>
+                </span>
               </h1>
+
+              {/* Interactive Capability Dots / Progress Indicator */}
+              <div className="pt-1 flex items-center justify-center lg:justify-start gap-2 select-none">
+                {ROTATING_PHRASES.map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setIsFlipping(true);
+                      setTimeout(() => {
+                        setPhraseIndex(idx);
+                        setIsFlipping(false);
+                      }, 200);
+                    }}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      phraseIndex === idx
+                        ? "w-7 bg-[#3155FF] shadow-[0_0_8px_rgba(49,85,255,0.4)]"
+                        : "w-2 bg-[#D1D5DB] hover:bg-[#9CA3AF]"
+                    }`}
+                    aria-label={`Switch to ${item.text}`}
+                  />
+                ))}
+              </div>
 
               {/* Short Clear Description in 1–2 lines */}
               <p className="mt-5 text-base sm:text-lg text-[#4B5563] max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
