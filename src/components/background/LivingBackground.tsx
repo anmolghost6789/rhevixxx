@@ -9,8 +9,8 @@ interface LivingBackgroundProps {
 interface FloatingShape {
   id: number;
   type: "hexagon" | "diamond" | "cross" | "brackets" | "circle";
-  x: number; // percentage
-  y: number; // percentage
+  x: number;
+  y: number;
   size: number;
   rotation: number;
   speed: number;
@@ -32,18 +32,25 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
   const [scrollY, setScrollY] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: -1000, y: -1000, active: false });
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
+  const mouseRef = useRef({
+    x: 0,
+    y: 0,
+    targetX: 0,
+    targetY: 0,
+    canvasX: -1000,
+    canvasY: -1000,
+    isActive: false,
+  });
 
   useEffect(() => {
-    // Check mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
     checkMobile();
 
-    // Reduced motion preference
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
 
@@ -52,7 +59,6 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
     };
     mediaQuery.addEventListener("change", handleMediaChange);
 
-    // Throttled scroll listener
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
@@ -64,29 +70,42 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
       }
     };
 
-    // Subtle 3–8px mouse parallax
     const handleMouseMove = (e: MouseEvent) => {
       if (window.innerWidth < 768) return;
       const cx = window.innerWidth / 2;
       const cy = window.innerHeight / 2;
-      // Normalizing to -1 to 1, then multiplying to create 3-6px max shift
-      mouseRef.current.targetX = ((e.clientX - cx) / cx) * 5;
-      mouseRef.current.targetY = ((e.clientY - cy) / cy) * 5;
+
+      mouseRef.current.targetX = ((e.clientX - cx) / cx) * 6;
+      mouseRef.current.targetY = ((e.clientY - cy) / cy) * 6;
+      mouseRef.current.canvasX = e.clientX;
+      mouseRef.current.canvasY = e.clientY;
+      mouseRef.current.isActive = true;
+
+      setCursorPos({ x: e.clientX, y: e.clientY, active: true });
+    };
+
+    const handleMouseLeave = () => {
+      mouseRef.current.canvasX = -1000;
+      mouseRef.current.canvasY = -1000;
+      mouseRef.current.isActive = false;
+      setCursorPos((prev) => ({ ...prev, active: false }));
     };
 
     window.addEventListener("resize", checkMobile);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    document.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       mediaQuery.removeEventListener("change", handleMediaChange);
       window.removeEventListener("resize", checkMobile);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
-  // Low particle canvas loop
+  // Connected Particle Canvas with Interactive Cursor Bridging
   useEffect(() => {
     const isReduced = prefersReducedMotion || forceReducedMotion;
     if (isReduced) return;
@@ -107,8 +126,7 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
     };
     window.addEventListener("resize", handleResize);
 
-    // Particle nodes: 16 on desktop, 6 on mobile
-    const particleCount = isMobile ? 6 : 18;
+    const particleCount = isMobile ? 8 : 22;
     interface Particle {
       x: number;
       y: number;
@@ -122,10 +140,10 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
     const particles: Particle[] = Array.from({ length: particleCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.22,
-      vy: (Math.random() - 0.5) * 0.22,
-      radius: Math.random() * 1.5 + 1.2,
-      baseAlpha: Math.random() * 0.25 + 0.15,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: (Math.random() - 0.5) * 0.28,
+      radius: Math.random() * 1.6 + 1.2,
+      baseAlpha: Math.random() * 0.3 + 0.2,
       phase: Math.random() * Math.PI * 2,
     }));
 
@@ -136,8 +154,9 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
 
       ctx.clearRect(0, 0, width, height);
 
-      ctx.save();
-      ctx.translate(mouseRef.current.x, mouseRef.current.y);
+      const mX = mouseRef.current.canvasX;
+      const mY = mouseRef.current.canvasY;
+      const mActive = mouseRef.current.isActive && !isMobile;
 
       // Draw subtle connection lines between close particles
       for (let i = 0; i < particles.length; i++) {
@@ -146,8 +165,8 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 110) {
-            const alpha = (1 - dist / 110) * 0.07;
+          if (dist < 130) {
+            const alpha = (1 - dist / 130) * 0.08;
             ctx.strokeStyle = `rgba(49, 85, 255, ${alpha})`;
             ctx.lineWidth = 0.8;
             ctx.beginPath();
@@ -156,34 +175,67 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
             ctx.stroke();
           }
         }
+
+        // LIVE EFFECT: Interactive connection from particle to mouse cursor!
+        if (mActive) {
+          const mdx = particles[i].x - mX;
+          const mdy = particles[i].y - mY;
+          const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+
+          if (mDist < 150) {
+            const mAlpha = (1 - mDist / 150) * 0.25;
+            ctx.strokeStyle = `rgba(6, 182, 212, ${mAlpha})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(mX, mY);
+            ctx.stroke();
+
+            // Glow point at particle
+            ctx.fillStyle = `rgba(6, 182, 212, ${mAlpha * 1.5})`;
+            ctx.beginPath();
+            ctx.arc(particles[i].x, particles[i].y, particles[i].radius * 1.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
       }
 
       // Draw particles
       for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
-        p.phase += 0.015;
+        p.phase += 0.02;
 
-        // Wrap around viewport edges
         if (p.x < -20) p.x = width + 20;
         if (p.x > width + 20) p.x = -20;
         if (p.y < -20) p.y = height + 20;
         if (p.y > height + 20) p.y = -20;
 
         const pulseAlpha = p.baseAlpha * (0.8 + 0.2 * Math.sin(p.phase));
-        ctx.fillStyle = `rgba(49, 85, 255, ${pulseAlpha * 0.5})`;
+        ctx.fillStyle = `rgba(49, 85, 255, ${pulseAlpha * 0.7})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Very subtle micro core
-        ctx.fillStyle = `rgba(16, 18, 22, ${pulseAlpha * 0.4})`;
+        ctx.fillStyle = `rgba(16, 18, 22, ${pulseAlpha * 0.5})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius * 0.5, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      ctx.restore();
+      // Live Cursor Anchor Dot when mouse active
+      if (mActive) {
+        ctx.fillStyle = "rgba(49, 85, 255, 0.4)";
+        ctx.beginPath();
+        ctx.arc(mX, mY, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "rgba(6, 182, 212, 0.8)";
+        ctx.beginPath();
+        ctx.arc(mX, mY, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
       animId = requestAnimationFrame(render);
     };
 
@@ -216,9 +268,24 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
         }}
       />
 
-      {/* 3. Soft Blurred Light Fields (Deep Blue + Indigo + Subtle Cyan) */}
+      {/* 3. LIVE EFFECT: Interactive Follower Spotlight Aura (glows around cursor) */}
+      {cursorPos.active && !isMobile && (
+        <div
+          className="absolute rounded-full pointer-events-none transition-transform duration-75 ease-out will-change-transform"
+          style={{
+            width: "500px",
+            height: "500px",
+            left: -250,
+            top: -250,
+            transform: `translate3d(${cursorPos.x}px, ${cursorPos.y}px, 0)`,
+            background: "radial-gradient(circle, rgba(49,85,255,0.075) 0%, rgba(6,182,212,0.035) 45%, transparent 70%)",
+            filter: "blur(35px)",
+          }}
+        />
+      )}
+
+      {/* 4. Soft Blurred Light Fields (Deep Blue + Indigo + Subtle Cyan) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Light Field 1: Deep Blue (Top Left) */}
         <div
           className="absolute -top-[10%] -left-[10%] w-[680px] h-[680px] rounded-full blur-[160px] opacity-[0.045] transition-transform duration-700 ease-out will-change-transform pointer-events-none"
           style={{
@@ -227,7 +294,6 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
           }}
         />
 
-        {/* Light Field 2: Indigo (Middle Right) */}
         <div
           className="absolute top-[40%] -right-[12%] w-[720px] h-[720px] rounded-full blur-[180px] opacity-[0.038] transition-transform duration-700 ease-out will-change-transform pointer-events-none"
           style={{
@@ -236,7 +302,6 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
           }}
         />
 
-        {/* Light Field 3: Subtle Cyan (Bottom Left) */}
         <div
           className="absolute top-[75%] left-[5%] w-[580px] h-[580px] rounded-full blur-[150px] opacity-[0.025] transition-transform duration-700 ease-out will-change-transform pointer-events-none"
           style={{
@@ -246,7 +311,7 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
         />
       </div>
 
-      {/* 4. Fine Technical Spatial Grid */}
+      {/* 5. Fine Technical Spatial Grid */}
       <div
         className="absolute inset-0 transition-transform duration-300 ease-out will-change-transform"
         style={{
@@ -259,7 +324,97 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
         }}
       />
 
-      {/* 5. Minimal Coordinate Rulers / Crosshairs pattern */}
+      {/* 6. LIVE EFFECT: Cybernetic Horizontal Radar Scan Line */}
+      {!isReduced && (
+        <div className="absolute inset-x-0 h-[2px] pointer-events-none animate-radar-scan z-0 opacity-40">
+          <div className="w-full h-full bg-gradient-to-r from-transparent via-[#3155FF]/40 via-[#06B6D4]/50 to-transparent" />
+          <div className="w-full h-8 -mt-4 bg-gradient-to-b from-[#3155FF]/[0.02] to-transparent blur-xs" />
+        </div>
+      )}
+
+      {/* 7. LIVE EFFECT: Animated Flowing AI Signal Paths & Traveling Data Packets */}
+      {!isReduced && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-[1]" aria-hidden="true">
+          <svg
+            className="w-full h-full opacity-[0.25]"
+            viewBox="0 0 1440 900"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <defs>
+              <linearGradient id="liveSignalGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#38BDF8" stopOpacity="0" />
+                <stop offset="50%" stopColor="#2563EB" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#6366F1" stopOpacity="0" />
+              </linearGradient>
+
+              <linearGradient id="liveSignalGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#818CF8" stopOpacity="0" />
+                <stop offset="70%" stopColor="#0284C7" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#38BDF8" stopOpacity="0" />
+              </linearGradient>
+
+              <filter id="liveGlowSubtle" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            {/* Path 1: Upper flowing curve */}
+            <path
+              d="M -100 220 C 350 140, 720 310, 1150 180 S 1500 240, 1600 220"
+              stroke="url(#liveSignalGrad1)"
+              strokeWidth="1.2"
+              strokeDasharray="4 8"
+            />
+
+            {/* Traveling Data Packet 1 */}
+            <circle r="3" fill="#3155FF" filter="url(#liveGlowSubtle)">
+              <animateMotion
+                path="M -100 220 C 350 140, 720 310, 1150 180 S 1500 240, 1600 220"
+                dur="16s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <circle r="1.5" fill="#38BDF8">
+              <animateMotion
+                path="M -100 220 C 350 140, 720 310, 1150 180 S 1500 240, 1600 220"
+                dur="16s"
+                begin="-8s"
+                repeatCount="indefinite"
+              />
+            </circle>
+
+            {/* Path 2: Mid-lower connecting network trajectory */}
+            <path
+              d="M -50 620 C 280 540, 680 720, 1050 590 S 1400 660, 1550 620"
+              stroke="url(#liveSignalGrad2)"
+              strokeWidth="1.2"
+              strokeDasharray="6 10"
+            />
+
+            {/* Traveling Data Packet 2 */}
+            <circle r="3" fill="#0284C7" filter="url(#liveGlowSubtle)">
+              <animateMotion
+                path="M -50 620 C 280 540, 680 720, 1050 590 S 1400 660, 1550 620"
+                dur="20s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <circle r="1.5" fill="#06B6D4">
+              <animateMotion
+                path="M -50 620 C 280 540, 680 720, 1050 590 S 1400 660, 1550 620"
+                dur="20s"
+                begin="-10s"
+                repeatCount="indefinite"
+              />
+            </circle>
+          </svg>
+        </div>
+      )}
+
+      {/* 8. Minimal Coordinate Rulers / Crosshairs pattern */}
       <div className="absolute inset-0 hidden md:block opacity-[0.05] pointer-events-none">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -272,7 +427,7 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
         </svg>
       </div>
 
-      {/* 6. Subtle Floating Geometric Shapes with gentle slow rotation */}
+      {/* 9. Floating Geometric Shapes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none hidden sm:block">
         {INITIAL_SHAPES.map((shape) => {
           const parallaxY = (scrollY * shape.speed) % 40;
@@ -318,14 +473,27 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = ({
         })}
       </div>
 
-      {/* 7. Canvas for connected atmospheric particles */}
+      {/* 10. LIVE EFFECT: Floating Peripheral HUD Telemetry Indicators */}
+      <div className="absolute inset-0 pointer-events-none hidden xl:block z-0">
+        <div className="absolute top-[28%] right-[2.5%] px-3 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-[rgba(15,23,42,0.06)] shadow-2xs text-[10px] font-mono text-[#4B5563] flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>NEURAL SYNC: OPTIMAL</span>
+        </div>
+
+        <div className="absolute top-[64%] left-[2.5%] px-3 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-[rgba(15,23,42,0.06)] shadow-2xs text-[10px] font-mono text-[#4B5563] flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#3155FF]" />
+          <span>GLOBAL CLUSTER · 128k H100s</span>
+        </div>
+      </div>
+
+      {/* 11. Canvas for connected atmospheric particles + live cursor linking */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: 0.9 }}
+        className="absolute inset-0 pointer-events-none z-[2]"
+        style={{ opacity: 0.95 }}
       />
 
-      {/* 8. Vignette to seamlessly blend with content */}
+      {/* 12. Soft vignette blend into surface */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(246,247,249,0.3)_70%,#F6F7F9_100%)] pointer-events-none" />
     </div>
   );

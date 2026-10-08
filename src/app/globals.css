@@ -178,3 +178,26 @@ html.lenis, html.lenis body {
     linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
 }
+
+/* Live Radar Grid Scanning Line */
+@keyframes radarScan {
+  0% {
+    top: -5%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.65;
+  }
+  85% {
+    opacity: 0.65;
+  }
+  100% {
+    top: 105%;
+    opacity: 0;
+  }
+}
+
+.animate-radar-scan {
+  animation: radarScan 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
