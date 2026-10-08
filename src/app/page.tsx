@@ -2,41 +2,57 @@
 
 import React, { useState } from "react";
 import { SmoothScrollProvider } from "@/components/ui/SmoothScrollProvider";
-import { AnimatedBackground } from "@/components/background/AnimatedBackground";
 import { Navbar } from "@/components/ui/Navbar";
-import { OpportunityTicker } from "@/components/ui/OpportunityTicker";
 import { Hero } from "@/components/ui/Hero";
-import { TrustMetrics } from "@/components/ui/TrustMetrics";
-import { EditorialSection } from "@/components/ui/EditorialSection";
-import { WhyJoin } from "@/components/ui/WhyJoin";
-import { ExpertCarousel } from "@/components/ui/ExpertCarousel";
-import { ExpertiseExplorer } from "@/components/ui/ExpertiseExplorer";
-import { OpportunityGrid } from "@/components/ui/OpportunityGrid";
-import { HowItWorks } from "@/components/ui/HowItWorks";
-import { CompanyCTA } from "@/components/ui/CompanyCTA";
-import { Newsletter } from "@/components/ui/Newsletter";
-import { FinalCTA } from "@/components/ui/FinalCTA";
+import { ExpertsSection } from "@/components/ui/ExpertsSection";
+import { CoursesSection } from "@/components/ui/CoursesSection";
+import { OpportunitiesSection } from "@/components/ui/OpportunitiesSection";
+import { WhyRhevixSection } from "@/components/ui/WhyRhevixSection";
+import { FinalCTASection } from "@/components/ui/FinalCTASection";
 import { Footer } from "@/components/ui/Footer";
+import { LivingBackground } from "@/components/background/LivingBackground";
 
-// Modals
-import { TalentApplyModal } from "@/components/modals/TalentApplyModal";
-import { EnterpriseHireModal } from "@/components/modals/EnterpriseHireModal";
-import { OpportunityDetailModal } from "@/components/modals/OpportunityDetailModal";
-import { ExpertStoryModal } from "@/components/modals/ExpertStoryModal";
+// Interactive Modals
+import { AuthModal } from "@/components/modals/AuthModal";
+import { ExpertModal } from "@/components/modals/ExpertModal";
+import { CourseModal } from "@/components/modals/CourseModal";
+import { OpportunityModal } from "@/components/modals/OpportunityModal";
 
-import { Opportunity, ExpertStory } from "@/data/platformData";
+import { Expert, Course, OpportunityItem, EXPERTS } from "@/data/platformData";
 
 export default function HomePage() {
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
-  const [isHireModalOpen, setIsHireModalOpen] = useState(false);
-  const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(null);
-  const [selectedStory, setSelectedStory] = useState<ExpertStory | null>(null);
-  const [initialRoleForApply, setInitialRoleForApply] = useState<string | undefined>(undefined);
-  const [forceReducedMotion, setForceReducedMotion] = useState(false);
+  const [authModalState, setAuthModalState] = useState<{
+    isOpen: boolean;
+    mode: "login" | "join";
+  }>({
+    isOpen: false,
+    mode: "join",
+  });
 
-  const handleOpenApply = (prefilledRole?: string) => {
-    setInitialRoleForApply(prefilledRole);
-    setIsApplyModalOpen(true);
+  const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedOpportunity, setSelectedOpportunity] = useState<OpportunityItem | null>(null);
+
+  const handleOpenLogin = () => {
+    setAuthModalState({ isOpen: true, mode: "login" });
+  };
+
+  const handleOpenJoin = () => {
+    setAuthModalState({ isOpen: true, mode: "join" });
+  };
+
+  const handleExploreExperts = () => {
+    const el = document.getElementById("experts");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleExploreCourses = () => {
+    const el = document.getElementById("courses");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleExploreOpportunities = () => {
@@ -46,109 +62,77 @@ export default function HomePage() {
     }
   };
 
-  const handleSelectCategoryFromExplorer = (categoryTitle: string) => {
-    const el = document.getElementById("opportunities");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <SmoothScrollProvider>
       <div className="relative min-h-screen bg-[#F6F7F9] text-[#17191D] selection:bg-[#3155FF] selection:text-white">
-        {/* Living AI Ambient Multi-Layer Background */}
-        <AnimatedBackground forceReducedMotion={forceReducedMotion} />
+        {/* Ambient Living Background with 2026 AR/VR motion */}
+        <LivingBackground />
 
-        {/* Fixed Navigation Bar */}
+        {/* Minimal Blurred Sticky Navbar */}
         <Navbar
-          onOpenApply={() => handleOpenApply()}
-          onOpenHire={() => setIsHireModalOpen(true)}
-          reducedMotion={forceReducedMotion}
-          onToggleMotion={() => setForceReducedMotion((prev) => !prev)}
+          onOpenLogin={handleOpenLogin}
+          onOpenJoin={handleOpenJoin}
         />
 
         <main className="relative z-10 flex flex-col">
-          {/* Editorial Grand Hero */}
+          {/* Hero Section */}
           <Hero
-            onOpenApply={() => handleOpenApply()}
+            onExploreExperts={handleExploreExperts}
+            onExploreCourses={handleExploreCourses}
+            onSelectHeroExpert={() => setSelectedExpert(EXPERTS[0])}
+          />
+
+          {/* Experts Section */}
+          <ExpertsSection
+            onSelectExpert={(expert) => setSelectedExpert(expert)}
+            onExploreAllExperts={handleExploreExperts}
+          />
+
+          {/* Courses Section */}
+          <CoursesSection
+            onSelectCourse={(course) => setSelectedCourse(course)}
+            onViewAllCourses={handleExploreCourses}
+          />
+
+          {/* Opportunities Section */}
+          <OpportunitiesSection
+            onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
             onExploreOpportunities={handleExploreOpportunities}
           />
 
-          {/* Live Opportunity Ticker */}
-          <OpportunityTicker
-            onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
-          />
+          {/* Why RHEVIX (3 Simple Benefits with Large Typography) */}
+          <WhyRhevixSection />
 
-          {/* Institutional Statistics & Scale */}
-          <TrustMetrics />
-
-          {/* Editorial Technology Magazine Section */}
-          <EditorialSection onOpenApply={() => handleOpenApply()} />
-
-          {/* Why RHEVIX / Value Propositions */}
-          <WhyJoin onOpenApply={() => handleOpenApply()} />
-
-          {/* Frontier Voices & Audio Dispatch Carousel */}
-          <ExpertCarousel
-            onPlayStory={(story) => setSelectedStory(story)}
-          />
-
-          {/* Interactive Expertise Taxonomies */}
-          <ExpertiseExplorer
-            onSelectCategoryFilter={handleSelectCategoryFromExplorer}
-          />
-
-          {/* Opportunity Marketplace */}
-          <OpportunityGrid
-            onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
-          />
-
-          {/* 4-Step Calibration & Workflow */}
-          <HowItWorks onOpenApply={() => handleOpenApply()} />
-
-          {/* Full-Width Enterprise Company CTA */}
-          <CompanyCTA onOpenHire={() => setIsHireModalOpen(true)} />
-
-          {/* Newsletter & Opportunity Dispatch */}
-          <Newsletter />
-
-          {/* Final Conversion Section */}
-          <FinalCTA
-            onOpenApply={() => handleOpenApply()}
-            onExploreOpportunities={handleExploreOpportunities}
+          {/* Final CTA */}
+          <FinalCTASection
+            onExploreExperts={handleExploreExperts}
+            onJoinRhevix={handleOpenJoin}
           />
         </main>
 
-        {/* Footer */}
-        <Footer
-          onOpenApply={() => handleOpenApply()}
-          onOpenHire={() => setIsHireModalOpen(true)}
+        {/* Minimal Clean Footer */}
+        <Footer onOpenJoin={handleOpenJoin} />
+
+        {/* Modals */}
+        <AuthModal
+          isOpen={authModalState.isOpen}
+          defaultMode={authModalState.mode}
+          onClose={() => setAuthModalState({ ...authModalState, isOpen: false })}
         />
 
-        {/* Interactive Modals */}
-        <TalentApplyModal
-          isOpen={isApplyModalOpen}
-          onClose={() => setIsApplyModalOpen(false)}
-          initialRole={initialRoleForApply}
+        <ExpertModal
+          expert={selectedExpert}
+          onClose={() => setSelectedExpert(null)}
         />
 
-        <EnterpriseHireModal
-          isOpen={isHireModalOpen}
-          onClose={() => setIsHireModalOpen(false)}
+        <CourseModal
+          course={selectedCourse}
+          onClose={() => setSelectedCourse(null)}
         />
 
-        <OpportunityDetailModal
+        <OpportunityModal
           opportunity={selectedOpportunity}
           onClose={() => setSelectedOpportunity(null)}
-          onOpenApplyModal={() => {
-            setSelectedOpportunity(null);
-            handleOpenApply();
-          }}
-        />
-
-        <ExpertStoryModal
-          story={selectedStory}
-          onClose={() => setSelectedStory(null)}
         />
       </div>
     </SmoothScrollProvider>
