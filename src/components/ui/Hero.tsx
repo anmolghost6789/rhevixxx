@@ -6,7 +6,7 @@ import { ScrollReveal } from "./ScrollReveal";
 
 interface HeroProps {
   onExploreExperts: () => void;
-  onExploreCourses: () => void;
+  onExploreOpportunities: () => void;
   onSelectHeroExpert: () => void;
 }
 
@@ -19,11 +19,11 @@ const ROTATING_PHRASES = [
 
 export const Hero: React.FC<HeroProps> = ({
   onExploreExperts,
-  onExploreCourses,
+  onExploreOpportunities,
   onSelectHeroExpert,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const cardRef = React.useRef<HTMLDivElement | null>(null);
+  const rafRef = React.useRef<number | null>(null);
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -43,18 +43,27 @@ export const Hero: React.FC<HeroProps> = ({
 
   const handleHeroVisualMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (window.innerWidth < 768) return;
+    const card = cardRef.current;
+    if (!card) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    setTilt({
-      x: (y / (rect.height / 2)) * -4,
-      y: (x / (rect.width / 2)) * 4,
+    const rotX = (y / (rect.height / 2)) * -4;
+    const rotY = (x / (rect.width / 2)) * 4;
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      if (card) {
+        card.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(10px) translateY(-4px)`;
+      }
     });
   };
 
   const handleHeroVisualMouseLeave = () => {
-    setIsHovered(false);
-    setTilt({ x: 0, y: 0 });
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (cardRef.current) {
+      cardRef.current.style.transform = "rotateX(0deg) rotateY(0deg) translateZ(0px) translateY(0px)";
+    }
   };
 
   return (
@@ -152,10 +161,10 @@ export const Hero: React.FC<HeroProps> = ({
                 </button>
 
                 <button
-                  onClick={onExploreCourses}
+                  onClick={onExploreOpportunities}
                   className="w-full sm:w-auto px-7 py-3.5 bg-white hover:bg-[#EEF1F4] text-[#17191D] font-[550] text-sm rounded-xl border border-[rgba(15,23,42,0.12)] hover:border-[rgba(15,23,42,0.25)] shadow-xs transition-all duration-200 flex items-center justify-center gap-2 hover:-translate-y-0.5"
                 >
-                  <span>Explore Courses</span>
+                  <span>Explore Opportunities</span>
                 </button>
               </div>
 
@@ -179,7 +188,6 @@ export const Hero: React.FC<HeroProps> = ({
               <div
                 className="relative w-full max-w-[380px] select-none"
                 style={{ perspective: "1000px" }}
-                onMouseEnter={() => setIsHovered(true)}
                 onMouseMove={handleHeroVisualMouseMove}
                 onMouseLeave={handleHeroVisualMouseLeave}
               >
@@ -188,14 +196,13 @@ export const Hero: React.FC<HeroProps> = ({
 
                 {/* Primary Expert Focus Card */}
                 <div
+                  ref={cardRef}
                   onClick={onSelectHeroExpert}
-                  className="relative bg-white rounded-2xl p-6 border border-[rgba(15,23,42,0.08)] shadow-[0_12px_36px_-12px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_20px_45px_-12px_rgba(49,85,255,0.14)] hover:border-[rgba(49,85,255,0.3)] cursor-pointer"
+                  className="relative bg-white rounded-2xl p-6 border border-[rgba(15,23,42,0.08)] shadow-[0_12px_36px_-12px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_20px_45px_-12px_rgba(49,85,255,0.14)] hover:border-[rgba(49,85,255,0.3)] cursor-pointer will-change-transform"
                   style={{
                     transformStyle: "preserve-3d",
-                    transform: isHovered
-                      ? `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateZ(10px) translateY(-4px)`
-                      : "rotateX(0deg) rotateY(0deg) translateZ(0px) translateY(0px)",
-                    transition: isHovered ? "transform 0.12s ease-out, box-shadow 0.3s ease" : "all 0.5s ease",
+                    transform: "rotateX(0deg) rotateY(0deg) translateZ(0px) translateY(0px)",
+                    transition: "transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease",
                   }}
                 >
                   {/* Top Status */}
@@ -214,6 +221,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <img
                         src="/images/elena_vance.jpg"
                         alt="Dr. Elena Vance"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover object-top"
                       />
                     </div>
@@ -252,6 +261,8 @@ export const Hero: React.FC<HeroProps> = ({
                       <img
                         src="/images/marcus_thorne.jpg"
                         alt="Marcus Thorne"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover object-top"
                       />
                     </div>
@@ -261,7 +272,7 @@ export const Hero: React.FC<HeroProps> = ({
                     </div>
                   </div>
                   <span className="px-2 py-0.5 rounded-md bg-[#EEF1F4] text-[#3155FF] font-mono text-[10px] font-semibold">
-                    18h Course
+                    Active Mentor
                   </span>
                 </div>
               </div>

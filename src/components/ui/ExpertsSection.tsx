@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { EXPERTS, Expert } from "@/data/platformData";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { ScrollReveal } from "./ScrollReveal";
@@ -24,23 +24,6 @@ export const ExpertsSection: React.FC<ExpertsSectionProps> = ({
   onSelectExpert,
   onExploreAllExperts,
 }) => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (window.innerWidth < 768) return;
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      setMousePos({
-        x: ((e.clientX - cx) / cx) * 6,
-        y: ((e.clientY - cy) / cy) * 6,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   return (
     <section
       id="experts"
@@ -50,10 +33,7 @@ export const ExpertsSection: React.FC<ExpertsSectionProps> = ({
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
         {/* Holographic Calibration Rings */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full border border-[#3155FF]/[0.04] transition-transform duration-700 ease-out"
-          style={{
-            transform: `translate(-50%, -50%) translate3d(${mousePos.x * 0.5}px, ${mousePos.y * 0.5}px, 0)`,
-          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full border border-[#3155FF]/[0.04]"
         >
           <div className="absolute inset-16 rounded-full border border-[#06B6D4]/[0.03] border-dashed" />
           <div className="absolute inset-36 rounded-full border border-[#4F46E5]/[0.03]" />
@@ -61,7 +41,7 @@ export const ExpertsSection: React.FC<ExpertsSectionProps> = ({
 
         {/* Thin Spatial Connection Lines between Virtual Nodes */}
         <svg
-          className="absolute inset-0 w-full h-full opacity-[0.25]"
+          className="absolute inset-0 w-full h-full opacity-[0.22]"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
@@ -99,13 +79,12 @@ export const ExpertsSection: React.FC<ExpertsSectionProps> = ({
         {FLOATING_TAGS.map((tag, idx) => (
           <div
             key={idx}
-            className="absolute hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/70 backdrop-blur-md border border-[rgba(15,23,42,0.06)] text-[10px] font-mono font-medium text-[#4B5563] shadow-xs transition-transform duration-700 ease-out"
+            className="absolute hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/70 backdrop-blur-md border border-[rgba(15,23,42,0.06)] text-[10px] font-mono font-medium text-[#4B5563] shadow-xs"
             style={{
               top: tag.top,
               bottom: tag.bottom,
               left: tag.left,
               right: tag.right,
-              transform: `translate3d(${mousePos.x * (idx % 2 === 0 ? 0.8 : -0.8)}px, ${mousePos.y * (idx % 2 === 0 ? 0.8 : -0.8)}px, 0)`,
             }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#3155FF]/70" />

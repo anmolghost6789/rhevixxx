@@ -98,7 +98,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </h3>
               <p className="text-xs text-[#4B5563] mt-1">
                 {mode === "login"
-                  ? "Access your enrolled courses and mentor conversations."
+                  ? "Access your saved opportunities and mentor conversations."
                   : "Connect with frontier AI experts, masterclasses, and verified contracts."}
               </p>
             </div>

@@ -36,11 +36,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenJoin }) => {
                 </a>
               </li>
               <li>
-                <a href="#courses" className="hover:text-[#101216] transition-colors">
-                  Courses
-                </a>
-              </li>
-              <li>
                 <a href="#opportunities" className="hover:text-[#101216] transition-colors">
                   Opportunities
                 </a>

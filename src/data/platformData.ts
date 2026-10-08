@@ -11,19 +11,6 @@ export interface Expert {
   featuredTopic: string;
 }
 
-export interface Course {
-  id: string;
-  title: string;
-  expertName: string;
-  expertRole: string;
-  expertPhoto: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
-  duration: string;
-  lessonsCount: number;
-  image: string;
-  description: string;
-  badge?: string;
-}
 
 export interface OpportunityItem {
   id: string;
@@ -159,86 +146,6 @@ export const EXPERTS: Expert[] = [
   },
 ];
 
-export const COURSES: Course[] = [
-  {
-    id: "course-1",
-    title: "Frontier LLM Post-Training: SFT, DPO & RLHF",
-    expertName: "Dr. Elena Vance",
-    expertRole: "Principal Alignment Researcher",
-    expertPhoto: "/images/elena_vance.jpg",
-    level: "Advanced",
-    duration: "6 Weeks · 18h",
-    lessonsCount: 24,
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
-    description: "Deep dive into reward modeling, preference optimization, refusal vector calibration, and chain-of-thought verification.",
-    badge: "Popular",
-  },
-  {
-    id: "course-2",
-    title: "Distributed GPU Systems & Slurm Orchestration",
-    expertName: "Marcus Thorne",
-    expertRole: "Staff Distributed AI Architect",
-    expertPhoto: "/images/marcus_thorne.jpg",
-    level: "Intermediate",
-    duration: "4 Weeks · 14h",
-    lessonsCount: 18,
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80",
-    description: "Hands-on cluster configuration, InfiniBand topology debugging, vLLM inference tuning, and Slurm batch management.",
-    badge: "Hands-on",
-  },
-  {
-    id: "course-3",
-    title: "Multimodal Vision & 3D Spatial Intelligence",
-    expertName: "Sophia Chen",
-    expertRole: "Lead Multimodal Perception Engineer",
-    expertPhoto: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&auto=format&fit=crop&q=80",
-    level: "Advanced",
-    duration: "5 Weeks · 16h",
-    lessonsCount: 20,
-    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=800&auto=format&fit=crop&q=80",
-    description: "Build 3D Gaussian splatting primitives, train spatial point-cloud representations, and integrate robotics sensor streams.",
-    badge: "Frontier",
-  },
-  {
-    id: "course-4",
-    title: "Designing Steerable AI Interfaces & Agent UX",
-    expertName: "Alex Rivera",
-    expertRole: "Autonomous Agent Architect",
-    expertPhoto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&auto=format&fit=crop&q=80",
-    level: "Intermediate",
-    duration: "4 Weeks · 12h",
-    lessonsCount: 16,
-    image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80",
-    description: "UX design patterns for probabilistic systems, token streaming states, diff inspectors, and multi-agent supervisory canvases.",
-    badge: "Design",
-  },
-  {
-    id: "course-5",
-    title: "Formal Verification & Lean 4 for AI Reasoning",
-    expertName: "Dr. Tariq Al-Mansoor",
-    expertRole: "Cognitive Science & Reasoning Lead",
-    expertPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80",
-    level: "Advanced",
-    duration: "6 Weeks · 20h",
-    lessonsCount: 26,
-    image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&auto=format&fit=crop&q=80",
-    description: "Construct interactive theorem proving pipelines in Lean 4 to formally verify reasoning model correctness and mathematical proofs.",
-    badge: "Math & Logic",
-  },
-  {
-    id: "course-6",
-    title: "Autonomous Multi-Agent Systems in Production",
-    expertName: "Dr. Aris Thorne",
-    expertRole: "Formal Verification Specialist",
-    expertPhoto: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
-    level: "Advanced",
-    duration: "5 Weeks · 15h",
-    lessonsCount: 22,
-    image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&auto=format&fit=crop&q=80",
-    description: "Architecting self-healing agent swarms with memory persistence, deterministic guardrails, and automated recovery loops.",
-    badge: "Production",
-  },
-];
 
 export const OPPORTUNITIES: OpportunityItem[] = [
   {

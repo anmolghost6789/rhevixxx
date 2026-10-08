@@ -179,10 +179,10 @@ html.lenis, html.lenis body {
     linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
 }
 
-/* Live Radar Grid Scanning Line */
+/* Live Radar Grid Scanning Line (GPU-accelerated) */
 @keyframes radarScan {
   0% {
-    top: -5%;
+    transform: translate3d(0, -5vh, 0);
     opacity: 0;
   }
   15% {
@@ -192,12 +192,13 @@ html.lenis, html.lenis body {
     opacity: 0.65;
   }
   100% {
-    top: 105%;
+    transform: translate3d(0, 105vh, 0);
     opacity: 0;
   }
 }
 
 .animate-radar-scan {
   animation: radarScan 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
 }
 
