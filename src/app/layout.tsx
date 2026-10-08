@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "rhevix — Empower Your Digital Transformation | Frontier AI Talent Platform",
+  title: "RHEVIX — Empower Your Digital Transformation",
   description:
     "A global platform connecting exceptional developers, AI engineers, researchers, designers, scientists, analysts, and domain experts with companies building the future of AI.",
   keywords: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "rhevix Intelligence Network" }],
   openGraph: {
-    title: "rhevix — Empower Your Digital Transformation",
+    title: "RHEVIX — Empower Your Digital Transformation",
     description:
       "Connect your expertise with ambitious AI teams, research projects, and opportunities shaping the next generation of technology.",
     url: "https://rhevix.ai",

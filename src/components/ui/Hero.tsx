@@ -49,8 +49,8 @@ export const Hero: React.FC<HeroProps> = ({
 
               {/* Huge Simple Headline */}
               <h1 className="text-4xl sm:text-6xl lg:text-[70px] font-[750] tracking-tight text-[#101216] leading-[1.06]">
-                Learn from experts. <br />
-                <span className="text-[#101216]">Build what’s next.</span>
+                Empower Your <br />
+                <span className="text-[#101216]">Digital Transformation</span>
               </h1>
 
               {/* Short Clear Description in 1–2 lines */}
