@@ -68,7 +68,27 @@ export const Hero: React.FC<HeroProps> = ({
 
   return (
     <section className="relative pt-32 sm:pt-40 pb-20 sm:pb-28 overflow-hidden bg-transparent">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Background Graphic Accents */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
+        {/* Soft Radial Ambient Aura */}
+        <div className="absolute -top-20 left-1/4 w-[520px] h-[520px] rounded-full bg-gradient-to-tr from-[#3155FF]/10 to-[#06B6D4]/10 blur-[80px] opacity-70 pointer-events-none" />
+
+        {/* Fine Technical Coordinate Accents */}
+        <div className="absolute top-36 left-4 hidden 2xl:block opacity-45 font-mono text-[10px] text-[#9CA3AF] space-y-1">
+          <div>+ LAT: 21.1458° N</div>
+          <div>+ LON: 79.0882° E</div>
+          <div>// SEC: 01_HERO_SURFACE</div>
+        </div>
+
+        {/* Subtle SVG Concentric Arc */}
+        <svg className="absolute -top-10 -right-20 w-[420px] h-[420px] opacity-[0.25] pointer-events-none" viewBox="0 0 400 400" fill="none">
+          <circle cx="200" cy="200" r="180" stroke="#3155FF" strokeWidth="0.8" strokeDasharray="6 8" />
+          <circle cx="200" cy="200" r="130" stroke="#06B6D4" strokeWidth="0.8" strokeDasharray="3 6" />
+          <circle cx="200" cy="200" r="80" stroke="#4F46E5" strokeWidth="0.5" />
+        </svg>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Headline, Clear Copy & CTAs */}
           <div className="lg:col-span-7 space-y-7 text-center lg:text-left">

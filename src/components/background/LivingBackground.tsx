@@ -17,12 +17,12 @@ interface FloatingShape {
 }
 
 const STATIC_SHAPES: FloatingShape[] = [
-  { id: 1, type: "hexagon", x: 8, y: 14, size: 28, rotation: 12, opacity: 0.08 },
-  { id: 2, type: "cross", x: 88, y: 22, size: 16, rotation: 45, opacity: 0.1 },
-  { id: 3, type: "brackets", x: 14, y: 46, size: 22, rotation: 0, opacity: 0.09 },
-  { id: 4, type: "diamond", x: 82, y: 62, size: 24, rotation: 30, opacity: 0.08 },
-  { id: 5, type: "circle", x: 92, y: 80, size: 20, rotation: 0, opacity: 0.07 },
-  { id: 6, type: "cross", x: 6, y: 88, size: 18, rotation: 0, opacity: 0.09 },
+  { id: 1, type: "hexagon", x: 6, y: 12, size: 28, rotation: 12, opacity: 0.12 },
+  { id: 2, type: "cross", x: 92, y: 18, size: 16, rotation: 45, opacity: 0.14 },
+  { id: 3, type: "brackets", x: 12, y: 44, size: 22, rotation: 0, opacity: 0.12 },
+  { id: 4, type: "diamond", x: 86, y: 58, size: 24, rotation: 30, opacity: 0.12 },
+  { id: 5, type: "circle", x: 94, y: 82, size: 20, rotation: 0, opacity: 0.1 },
+  { id: 6, type: "cross", x: 5, y: 86, size: 18, rotation: 0, opacity: 0.12 },
 ];
 
 export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
@@ -87,7 +87,7 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
     };
     window.addEventListener("resize", handleResize);
 
-    const particleCount = isMobile ? 6 : 14;
+    const particleCount = isMobile ? 6 : 16;
     interface Particle {
       x: number;
       y: number;
@@ -102,8 +102,8 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
       y: Math.random() * height,
       vx: (Math.random() - 0.5) * 0.22,
       vy: (Math.random() - 0.5) * 0.22,
-      radius: Math.random() * 1.5 + 1.0,
-      alpha: Math.random() * 0.25 + 0.15,
+      radius: Math.random() * 1.6 + 1.1,
+      alpha: Math.random() * 0.28 + 0.16,
     }));
 
     let isDocumentVisible = !document.hidden;
@@ -144,10 +144,10 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
           const dy = p1.y - p2.y;
           const distSq = dx * dx + dy * dy;
 
-          if (distSq < 14400) { // 120px dist squared (avoids Math.sqrt)
-            const alpha = (1 - Math.sqrt(distSq) / 120) * 0.07;
+          if (distSq < 16900) { // 130px dist squared
+            const alpha = (1 - Math.sqrt(distSq) / 130) * 0.08;
             ctx.strokeStyle = `rgba(49, 85, 255, ${alpha})`;
-            ctx.lineWidth = 0.7;
+            ctx.lineWidth = 0.75;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
@@ -161,14 +161,20 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
           const mdy = p1.y - mY;
           const mDistSq = mdx * mdx + mdy * mdy;
 
-          if (mDistSq < 19600) { // 140px dist squared
-            const mAlpha = (1 - Math.sqrt(mDistSq) / 140) * 0.18;
+          if (mDistSq < 22500) { // 150px dist squared
+            const mAlpha = (1 - Math.sqrt(mDistSq) / 150) * 0.22;
             ctx.strokeStyle = `rgba(6, 182, 212, ${mAlpha})`;
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 0.85;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(mX, mY);
             ctx.stroke();
+
+            // Glow ring at particle
+            ctx.fillStyle = `rgba(6, 182, 212, ${mAlpha * 1.5})`;
+            ctx.beginPath();
+            ctx.arc(p1.x, p1.y, p1.radius * 1.4, 0, Math.PI * 2);
+            ctx.fill();
           }
         }
 
@@ -205,9 +211,10 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
         className="absolute inset-0 opacity-90 will-change-transform"
         style={{
           background: `
-            radial-gradient(circle at 10% 12%, rgba(49, 85, 255, 0.045) 0%, transparent 45%),
-            radial-gradient(circle at 88% 38%, rgba(79, 70, 229, 0.038) 0%, transparent 42%),
-            radial-gradient(circle at 22% 78%, rgba(6, 182, 212, 0.028) 0%, transparent 38%),
+            radial-gradient(circle at 8% 12%, rgba(49, 85, 255, 0.055) 0%, transparent 45%),
+            radial-gradient(circle at 90% 35%, rgba(79, 70, 229, 0.045) 0%, transparent 42%),
+            radial-gradient(circle at 20% 75%, rgba(6, 182, 212, 0.035) 0%, transparent 40%),
+            radial-gradient(circle at 80% 88%, rgba(49, 85, 255, 0.03) 0%, transparent 35%),
             linear-gradient(to top right, #F6F7F9, #FAFBFD, #F2F5FA)
           `,
         }}
@@ -231,24 +238,110 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
           left: 0,
           top: 0,
           transform: "translate3d(-1000px, -1000px, 0)",
-          background: "radial-gradient(circle, rgba(49,85,255,0.06) 0%, rgba(6,182,212,0.025) 45%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(49,85,255,0.065) 0%, rgba(6,182,212,0.028) 45%, transparent 70%)",
           filter: "blur(24px)",
         }}
       />
 
       {/* 4. Fine Technical Spatial Grid */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-70"
+        className="absolute inset-0 pointer-events-none opacity-75"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(15, 23, 42, 0.025) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(15, 23, 42, 0.025) 1px, transparent 1px)
+            linear-gradient(to right, rgba(15, 23, 42, 0.028) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15, 23, 42, 0.028) 1px, transparent 1px)
           `,
           backgroundSize: "48px 48px",
         }}
       />
 
-      {/* 5. Minimal Coordinate Crosshairs */}
+      {/* 5. Flowing Topological AI Vector Flow Curves (Rich Cybernetic Background Graphic) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
+        <svg
+          className="w-full h-full opacity-[0.32]"
+          viewBox="0 0 1440 900"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            <linearGradient id="bgFlowGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#3155FF" stopOpacity="0" />
+              <stop offset="30%" stopColor="#3155FF" stopOpacity="0.4" />
+              <stop offset="70%" stopColor="#06B6D4" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#4F46E5" stopOpacity="0" />
+            </linearGradient>
+
+            <linearGradient id="bgFlowGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#06B6D4" stopOpacity="0" />
+              <stop offset="40%" stopColor="#3155FF" stopOpacity="0.3" />
+              <stop offset="80%" stopColor="#4F46E5" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#3155FF" stopOpacity="0" />
+            </linearGradient>
+
+            <linearGradient id="bgFlowGrad3" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#4F46E5" stopOpacity="0" />
+              <stop offset="50%" stopColor="#06B6D4" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#3155FF" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          {/* Flowing Vector Line 1 */}
+          <path
+            d="M -120 180 C 280 80, 680 280, 1100 140 S 1520 220, 1650 180"
+            stroke="url(#bgFlowGrad1)"
+            strokeWidth="1.2"
+            strokeDasharray="4 8"
+          />
+
+          {/* Flowing Vector Line 2 */}
+          <path
+            d="M -80 340 C 350 260, 750 440, 1180 320 S 1580 380, 1680 340"
+            stroke="url(#bgFlowGrad2)"
+            strokeWidth="0.9"
+            strokeDasharray="6 10"
+          />
+
+          {/* Flowing Vector Line 3 (Mid-Lower Horizon) */}
+          <path
+            d="M -100 640 C 320 560, 720 740, 1120 600 S 1500 680, 1640 640"
+            stroke="url(#bgFlowGrad3)"
+            strokeWidth="1.1"
+            strokeDasharray="5 9"
+          />
+
+          {/* Subtle Vertical Neural Connection Vectors */}
+          <line x1="280" y1="120" x2="280" y2="380" stroke="rgba(49,85,255,0.06)" strokeWidth="0.8" strokeDasharray="3 3" />
+          <line x1="720" y1="160" x2="720" y2="520" stroke="rgba(6,182,212,0.07)" strokeWidth="0.8" strokeDasharray="3 3" />
+          <line x1="1140" y1="220" x2="1140" y2="640" stroke="rgba(79,70,229,0.06)" strokeWidth="0.8" strokeDasharray="3 3" />
+
+          {/* Subtle Circuit Nodes */}
+          <circle cx="280" cy="180" r="3" fill="#3155FF" fillOpacity="0.25" />
+          <circle cx="720" cy="270" r="3" fill="#06B6D4" fillOpacity="0.3" />
+          <circle cx="1140" cy="320" r="3" fill="#4F46E5" fillOpacity="0.25" />
+        </svg>
+      </div>
+
+      {/* 6. Geometric Hexagonal Honeycomb Matrix (Subtle Tech Clusters) */}
+      <div className="absolute inset-0 pointer-events-none hidden xl:block opacity-[0.065]">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="hex-pattern" width="60" height="103.923" patternUnits="userSpaceOnUse" patternTransform="scale(0.8)">
+              <path
+                d="M30 0 L60 17.32 L60 51.96 L30 69.28 L0 51.96 L0 17.32 Z M30 103.92 L60 86.6 L60 51.96 L30 69.28 L0 51.96 L0 86.6 Z"
+                fill="none"
+                stroke="#1E293B"
+                strokeWidth="0.75"
+              />
+            </pattern>
+          </defs>
+          {/* Masked to corners so it doesn't clutter center */}
+          <rect x="0" y="0" width="320" height="400" fill="url(#hex-pattern)" />
+          <rect x="100%" y="45%" width="320" height="400" transform="translate(-320, 0)" fill="url(#hex-pattern)" />
+        </svg>
+      </div>
+
+      {/* 7. Minimal Coordinate Crosshairs Pattern */}
       <div className="absolute inset-0 hidden md:block opacity-[0.045] pointer-events-none">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -261,7 +354,7 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
         </svg>
       </div>
 
-      {/* 6. Static Floating Geometric Accent Shapes */}
+      {/* 8. Static Floating Geometric Accent Shapes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none hidden sm:block">
         {STATIC_SHAPES.map((shape) => (
           <div
@@ -304,7 +397,28 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
         ))}
       </div>
 
-      {/* 7. Peripheral HUD Telemetry Indicators */}
+      {/* 9. Technical Coordinate Corner Reticles & Watermark Readouts */}
+      <div className="absolute inset-0 pointer-events-none hidden xl:block select-none z-0">
+        {/* Top-Right Technical Coordinates */}
+        <div className="absolute top-24 right-8 font-mono text-[10px] text-[#9CA3AF] space-y-1 text-right opacity-60">
+          <div>// RHEVIX_NET: 0x4F8A</div>
+          <div>// SYS_TOPOLOGY: DISTRIBUTED</div>
+        </div>
+
+        {/* Bottom-Left Technical Metadata */}
+        <div className="absolute bottom-16 left-8 font-mono text-[10px] text-[#9CA3AF] space-y-1 opacity-60">
+          <div>// LATENCY: &lt;85ms · TENSOR_DIMS: [4096, 4096]</div>
+          <div>// REGIONAL_HUBS: NAGPUR · PUNE · DUBAI</div>
+        </div>
+
+        {/* Corner Reticles */}
+        <div className="absolute top-6 left-6 text-[#9CA3AF] opacity-40 font-mono text-xs">┌</div>
+        <div className="absolute top-6 right-6 text-[#9CA3AF] opacity-40 font-mono text-xs">┐</div>
+        <div className="absolute bottom-6 left-6 text-[#9CA3AF] opacity-40 font-mono text-xs">└</div>
+        <div className="absolute bottom-6 right-6 text-[#9CA3AF] opacity-40 font-mono text-xs">┘</div>
+      </div>
+
+      {/* 10. Peripheral HUD Telemetry Indicators */}
       <div className="absolute inset-0 pointer-events-none hidden xl:block z-0">
         <div className="absolute top-[28%] right-[2.5%] px-3 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-[rgba(15,23,42,0.06)] shadow-2xs text-[10px] font-mono text-[#4B5563] flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -317,14 +431,14 @@ export const LivingBackground: React.FC<LivingBackgroundProps> = memo(({
         </div>
       </div>
 
-      {/* 8. Lightweight Canvas for connected atmospheric particles */}
+      {/* 11. Lightweight Canvas for connected atmospheric particles */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none z-[2]"
-        style={{ opacity: 0.9 }}
+        style={{ opacity: 0.92 }}
       />
 
-      {/* 9. Soft vignette blend into surface */}
+      {/* 12. Soft vignette blend into surface */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(246,247,249,0.3)_70%,#F6F7F9_100%)] pointer-events-none" />
     </div>
   );
